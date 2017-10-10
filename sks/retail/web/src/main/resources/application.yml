@@ -1,0 +1,77 @@
+
+# The @activeProfile@ will be filtered by gradle build parameter: gradle clean war -Pprofiles=production
+# You must add the 'clean' build command, if you don't edit this yml file. Otherwise, the profiles change
+# will not work. If no profiles specified, the 'default' will be used.
+#GLOBAL
+spring:
+  profiles:
+    active: @profile@
+
+logging:
+  level:
+    ROOT: info
+
+server:
+  contextPath: /retail
+  port: 8083
+
+
+# Database base configuration
+druid:
+  group:
+    defaultGroup: retail
+    balance: robin
+  datasource:
+    - identity: retail
+      group: retail
+      role: master
+      driverClassName: com.mysql.jdbc.Driver
+      mapperLocations: classpath*:com/sks/retail/**/*Mapper.xml
+      url: jdbc:mysql://192.168.1.230:3306/sks_retail?zeroDateTimeBehavior=convertToNull
+      username: mysql
+      password: mysql
+      initialSize: 5
+      filters: stat
+      maxActive: 8
+      minIdle: 5
+      maxWait: 50000
+      validationQuery: SELECT 1
+
+
+memcache:
+  addresses:
+    - server: 192.168.1.230:11211
+
+redis:
+  config:
+    default:
+      host: 192.168.1.230
+      port: 6379
+      maxTotal: 3
+      minIdle: 3
+      maxIdle: 3
+
+cookie:
+  domain:
+    supplier: sks.org
+    platform: sks.org
+
+poi:
+  uri: http://dev.sks.org/poi
+
+img:
+  uri: http://dev.sks.org/image
+
+product:
+  getSubUserProductCountUrl: http://dev.sks.org/product/gt/papi/baseInfo/sumProductByContact/
+
+---
+
+###########default相关配置信息在上面系统默认配置中配置##############
+spring:
+  profiles: default
+
+---
+
+spring:
+  profiles: production
